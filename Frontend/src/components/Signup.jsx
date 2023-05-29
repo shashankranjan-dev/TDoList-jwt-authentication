@@ -29,7 +29,7 @@ function Signup() {
       return;
     }
 
-    fetch(`http://localhost:5000/api/user/register`, {
+    fetch(`https://backend-todo-w0bf.onrender.com/api/user/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

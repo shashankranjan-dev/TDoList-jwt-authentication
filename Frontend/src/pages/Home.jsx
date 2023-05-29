@@ -20,10 +20,10 @@ const Home = () => {
   const fetchTodo = async (pageNumber) => {
     try {
       console.log(
-        `http://localhost:5000/api/todo/users/${id}/todos/${pageNumber}`
+        `https://backend-todo-w0bf.onrender.com/api/todo/users/${id}/todos/${pageNumber}`
       );
       const response = await axios.get(
-        `http://localhost:5000/api/todo/users/${id}/todos/${pageNumber}`
+        `https://backend-todo-w0bf.onrender.com/api/todo/users/${id}/todos/${pageNumber}`
       );
       let tempCom = [];
       let temp = [];
@@ -45,7 +45,7 @@ const Home = () => {
     console.log("Title: ", todoTitle, "Description: ", todoDescription);
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/todo/users/${id}/todos`,
+        `https://backend-todo-w0bf.onrender.com/api/todo/users/${id}/todos`,
         {
           title: todoTitle,
           description: todoDescription,
@@ -79,7 +79,7 @@ const Home = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/todo/users/${id}/todos/${todoid}`,
+        `https://backend-todo-w0bf.onrender.com/api/todo/users/${id}/todos/${todoid}`,
         {
           title: todoTitle,
           description: todoDescription,
@@ -103,7 +103,7 @@ const Home = () => {
   const makeTodoComplete = async (todoID) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/todo/users/${id}/todos/${todoID}/complete`
+        `https://backend-todo-w0bf.onrender.com/api/todo/users/${id}/todos/${todoID}/complete`
       );
       if (response.status === 200) {
         setShowAddTodo(false);
