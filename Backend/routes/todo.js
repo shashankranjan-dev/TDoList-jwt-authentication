@@ -27,8 +27,10 @@ router.post("/users/:userId/todos", (req, res) => {
 });
 
 // Get all ToDos for a specific user
-router.get("/users/:userId/todos", (req, res) => {
+router.get("/users/:userId/todos/:pageNumber", (req, res) => {
   const { userId } = req.params;
+  const { pageNumber } = req.params;
+  const pageSize = 5;
 
   User.findById(userId)
     .then((user) => {
@@ -36,7 +38,23 @@ router.get("/users/:userId/todos", (req, res) => {
         return res.status(404).json({ error: "User not found" });
       }
 
-      res.status(200).json(user.todo);
+      const totaltodo = user.todo.length;
+      console.log(totaltodo);
+      const totalPages = parseInt(totaltodo / pageSize) + 1;
+      console.log(totalPages);
+      const currentPage = parseInt(pageNumber) || 1;
+      console.log(currentPage);
+
+      if (currentPage < 1 || currentPage > totalPages) {
+        return res.status(400).json({ error: "Page not found" });
+      }
+
+      const startIndex = (currentPage - 1) * pageSize;
+      const endIndex = currentPage * pageSize;
+
+      const todos = user.todo.slice(startIndex, endIndex);
+
+      res.status(200).json({ totalPages, currentPage, todos });
     })
     .catch((err) =>
       res.status(500).json({ error: "Failed to retrieve ToDos", err: err })

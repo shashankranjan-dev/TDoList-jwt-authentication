@@ -11,24 +11,27 @@ const Home = () => {
   const [todoDescription, setToDoDescription] = useState("");
   const id = localStorage.getItem("id");
   const [todoid, setToDoID] = useState("");
+  var pageNumber = 1;
 
   useEffect(() => {
-    fetchTodo();
+    fetchTodo(pageNumber);
   }, []);
 
-  const fetchTodo = async () => {
+  const fetchTodo = async (pageNumber) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/todo/users/${id}/todos`
+      console.log(
+        `http://localhost:5000/api/todo/users/${id}/todos/${pageNumber}`
       );
-      setTodos(response.data);
+      const response = await axios.get(
+        `http://localhost:5000/api/todo/users/${id}/todos/${pageNumber}`
+      );
       let tempCom = [];
       let temp = [];
-      for (let i = 0; i < response.data.length; i++) {
-        if (response.data[i].completed === true) {
-          tempCom.push(response.data[i]);
+      for (let i = 0; i < response.data.todos.length; i++) {
+        if (response.data.todos[i].completed === true) {
+          tempCom.push(response.data.todos[i]);
         } else {
-          temp.push(response.data[i]);
+          temp.push(response.data.todos[i]);
         }
       }
       setCompleteedTodos(tempCom);
@@ -56,7 +59,7 @@ const Home = () => {
       console.log(response.data);
       if (response.status === 201) {
         setShowAddTodo(false);
-        fetchTodo();
+        fetchTodo(pageNumber);
       }
     } catch (error) {
       console.log(error);
@@ -90,7 +93,7 @@ const Home = () => {
       console.log(response.data);
       if (response.status === 200) {
         setShowEditTodo(false);
-        fetchTodo();
+        fetchTodo(pageNumber);
       }
     } catch (error) {
       console.log(error);
@@ -123,8 +126,18 @@ const Home = () => {
       }
       setTodos(temp);
     } else {
-      fetchTodo();
+      fetchTodo(pageNumber);
     }
+  };
+
+  const handlePaginationNext = async () => {
+    pageNumber++;
+    fetchTodo(pageNumber);
+  };
+
+  const handlePaginationPrevious = async () => {
+    pageNumber--;
+    fetchTodo(pageNumber);
   };
 
   return (
@@ -360,6 +373,20 @@ const Home = () => {
                     </div>
                   </div>
                 ))}
+                <div className="flex justify-between">
+                  <button
+                    onClick={handlePaginationPrevious}
+                    className="h-10 flex ml-4 bg-gray-500 hover:bg-gray-700 text-white font-bold rounded px-4 mt-2 py-2"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    onClick={handlePaginationNext}
+                    className="h-10 flex ml-4 bg-gray-500 hover:bg-gray-700 text-white font-bold rounded px-4 mt-2 py-2"
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
             </div>
             <div className="w-full lg:w-1/2  pr-2">
